@@ -1,0 +1,171 @@
+#참고
+https://joyhong.tistory.com/121
+#전체삭제
+MATCH (n)
+DETACH DELETE n
+
+-------------------------------------------------------------------------------
+LOAD CSV WITH HEADERS FROM 'file:///happy.csv' AS line
+CREATE (:단어 {기쁨:line.기쁨})
+
+CREATE (a:감정 { 기분 : '기쁨' });
+
+MATCH (n:`단어`) MATCH (b{기분:'기쁨'}) 
+CREATE (b) - [r:유사어] -> (n);
+-------------------------------------------------------------------------------
+LOAD CSV WITH HEADERS FROM 'file:///sweet.csv' AS line
+CREATE (:단맛 {메뉴:line.sweet})
+
+CREATE (a:맛 { 종류: '단맛' });
+
+MATCH (n:`단맛`) MATCH (b{종류:'단맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+------------------------------------------------------------------------------
+#땡긴다 관계
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'짠맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+
+-----------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+먼저 new project하나 만들고(나는 이름:mumukji, 비번:1234) 오른쪽위에 동그라미 세개있는거 누르면 manage 들어간다.
+Open Folder->import 누르면 나오는 파일공간에 우리 공용드라이브 neo4j에있는 csv파일들 다 넣어논다.
+이제 코드 시작!(enter부분 다 따로 실행해야함!!!)
+
+LOAD CSV WITH HEADERS FROM 'file:///happy.csv' AS line
+CREATE (:기쁨단어 {기쁨:line.기쁨})
+
+CREATE (a:감정 { 기분 : '기쁨' });
+
+MATCH (n:`기쁨단어`) MATCH (b{기분:'기쁨'}) 
+CREATE (b) - [r:유사어] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///sad.csv' AS line
+CREATE (:슬픔단어 {슬픔:line.슬픔})
+
+CREATE (a:감정 { 기분 : '슬픔' });
+
+MATCH (n:`슬픔단어`) MATCH (b{기분:'슬픔'}) 
+CREATE (b) - [r:유사어] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///angry.csv' AS line
+CREATE (:화남단어 {화남:line.화남})
+
+CREATE (a:감정 { 기분 : '화남' });
+
+MATCH (n:`화남단어`) MATCH (b{기분:'화남'}) 
+CREATE (b) - [r:유사어] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///tired.csv' AS line
+CREATE (:지침단어 {지침:line.지침})
+
+CREATE (a:감정 { 기분 : '지침' });
+
+MATCH (n:`지침단어`) MATCH (b{기분:'지침'}) 
+CREATE (b) - [r:유사어] -> (n);
+
+CREATE (a:감정 { 기분 : '기분' });
+
+MATCH (n{기분:'기분'}) MATCH (b{기분:'기쁨'}) 
+CREATE (n) - [r:종류] -> (b);
+
+MATCH (n{기분:'기분'}) MATCH (b{기분:'화남'}) 
+CREATE (n) - [r:종류] -> (b);
+
+MATCH (n{기분:'기분'}) MATCH (b{기분:'슬픔'}) 
+CREATE (n) - [r:종류] -> (b);
+
+MATCH (n{기분:'기분'}) MATCH (b{기분:'지침'}) 
+CREATE (n) - [r:종류] -> (b);
+
+LOAD CSV WITH HEADERS FROM 'file:///sweet.csv' AS line
+CREATE (:단맛 {메뉴:line.sweet})
+
+CREATE (a:맛 { 종류: '단맛' });
+
+MATCH (n:`단맛`) MATCH (b{종류:'단맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///spicy.csv' AS line
+CREATE (:매운맛 {메뉴:line.spicy})
+
+CREATE (a:맛 { 종류: '매운맛' });
+
+MATCH (n:`매운맛`) MATCH (b{종류:'매운맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///salty.csv' AS line
+CREATE (:짠맛 {메뉴:line.salty})
+
+CREATE (a:맛 { 종류: '짠맛' });
+
+MATCH (n:`짠맛`) MATCH (b{종류:'짠맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///sour.csv' AS line
+CREATE (:신맛 {메뉴:line.sour})
+
+CREATE (a:맛 { 종류: '신맛' });
+
+MATCH (n:`신맛`) MATCH (b{종류:'신맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+
+LOAD CSV WITH HEADERS FROM 'file:///greasy.csv' AS line
+CREATE (:느끼한맛 {메뉴:line.greasy})
+
+CREATE (a:맛 { 종류: '느끼한맛' });
+
+MATCH (n:`느끼한맛`) MATCH (b{종류:'느끼한맛'}) 
+CREATE (b) - [r:메뉴] -> (n);
+
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'단맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'짠맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'매운맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'신맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'기쁨'}) MATCH (b:맛{종류:'느끼한맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'화남'}) MATCH (b:맛{종류:'매운맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'화남'}) MATCH (b:맛{종류:'짠맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'화남'}) MATCH (b:맛{종류:'느끼한맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'슬픔'}) MATCH (b:맛{종류:'매운맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'슬픔'}) MATCH (b:맛{종류:'단맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'슬픔'}) MATCH (b:맛{종류:'짠맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'슬픔'}) MATCH (b:맛{종류:'느끼한맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'지침'}) MATCH (b:맛{종류:'단맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'지침'}) MATCH (b:맛{종류:'짠맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+MATCH (n:감정{기분:'지침'}) MATCH (b:맛{종류:'느끼한맛'}) 
+CREATE (n) - [r:땡긴다] -> (b);
+
+
+
+
+
+
+
